@@ -1,5 +1,5 @@
 # Big Data Analytics (BDA Spring 2026)
-## Week 2, Lecture 2: File Formats -- CSV, JSON, Avro, Parquet, ORC, Compression and Serialization
+## Week 2, Lecture 2: File Formats: CSV, JSON, Avro, Parquet, ORC, Compression and Serialization
 
 > The file format you choose can make the difference between a query that runs in 30 seconds and one that runs in 30 minutes. On the exact same data. On the exact same cluster. Simply converting data from CSV to Parquet has been shown to reduce query time by 10x and storage cost by 4x simultaneously.
 
@@ -8,11 +8,11 @@
 ## Table of Contents
 
 1. [Why Different File Formats Exist](#1-why-different-file-formats-exist)
-2. [CSV](#2-csv--comma-separated-values)
-3. [JSON](#3-json--javascript-object-notation)
-4. [Avro](#4-avro--the-serialization-champion)
-5. [Parquet](#5-parquet--the-analytics-powerhouse)
-6. [ORC](#6-orc--optimized-row-columnar)
+2. [CSV](#2-csv-comma-separated-values)
+3. [JSON](#3-json-javascript-object-notation)
+4. [Avro](#4-avro-the-serialization-champion)
+5. [Parquet](#5-parquet-the-analytics-powerhouse)
+6. [ORC](#6-orc-optimized-row-columnar)
 7. [Full Format Comparison](#7-full-format-comparison)
 8. [Serialization and Compression](#8-serialization-and-compression)
 9. [Choosing the Right Format](#9-choosing-the-right-format)
@@ -58,7 +58,7 @@ flowchart LR
 
 ---
 
-## 2. CSV -- Comma-Separated Values
+## 2. CSV: Comma-Separated Values
 
 The simplest, oldest, and most universally understood file format in data engineering.
 
@@ -93,11 +93,11 @@ Pure plain text. Values separated by commas. Each line is one record. First line
 
 ---
 
-## 3. JSON -- JavaScript Object Notation
+## 3. JSON: JavaScript Object Notation
 
 Already covered as a data type. Now examined specifically as a file format for Big Data storage.
 
-### Two Variants -- Critical Distinction
+### Two Variants: Critical Distinction
 
 ```mermaid
 flowchart TD
@@ -149,7 +149,7 @@ In a dataset with 50 fields and 100 million records, field names alone can consu
 
 ---
 
-## 4. Avro -- The Serialization Champion
+## 4. Avro: The Serialization Champion
 
 Apache Avro is the first binary format in this lecture. It represents a fundamentally different design philosophy.
 
@@ -189,7 +189,7 @@ flowchart TD
     style RN fill:#457b9d,color:#fff,stroke:#457b9d
 ```
 
-### Schema Evolution -- Avro's Killer Feature
+### Schema Evolution: Avro's Killer Feature
 
 Schema evolution means old readers can read new data and new readers can read old data. Avro defines rules for compatible schema changes.
 
@@ -238,7 +238,7 @@ flowchart LR
 
 ---
 
-## 5. Parquet -- The Analytics Powerhouse
+## 5. Parquet: The Analytics Powerhouse
 
 Apache Parquet is the most important file format in modern Big Data engineering. It is the de facto standard for analytical workloads in Spark, Hadoop, and cloud data lakes.
 
@@ -306,7 +306,7 @@ flowchart TD
 
 **Result: columnar reads approximately 2% of what row-based reads for this query. Roughly 50x less I/O.**
 
-### OLTP vs OLAP -- When Each Wins
+### OLTP vs OLAP: When Each Wins
 
 | | OLTP (Online Transaction Processing) | OLAP (Online Analytical Processing) |
 |--|--------------------------------------|--------------------------------------|
@@ -327,7 +327,7 @@ Columnar storage also achieves dramatically better compression because all value
 CS, DS, CS, CS, CS, DS, CS, DS, CS, CS, CS, CS, DS, CS, CS
 ```
 
-Run-length encoding or dictionary encoding reduces this to essentially two entries. In row-based storage the compressor sees a mix of different data types and values -- compression is far less effective.
+Run-length encoding or dictionary encoding reduces this to essentially two entries. In row-based storage the compressor sees a mix of different data types and values, so compression is far less effective.
 
 ```mermaid
 xychart-beta
@@ -377,7 +377,7 @@ flowchart TD
 
 ---
 
-## 6. ORC -- Optimized Row Columnar
+## 6. ORC: Optimized Row Columnar
 
 ORC is Apache Hive's answer to the same problem Parquet solves. Also a columnar binary format, developed by Hortonworks specifically for Hive optimization.
 
@@ -474,17 +474,28 @@ xychart-beta
 ### The Columnar Compression Effect
 
 ```mermaid
-flowchart LR
-    subgraph ROW3[Row-Based: mixed data per block]
-        RD["101 | Ali | CS | 3.7 | 2022\n102 | Sara | DS | 3.9 | 2021\nMixed types, poor compression"]
+flowchart TD
+    subgraph ROW3[Row-Based Storage]
+        RD1[Row 1: 101, Ali, CS, 3.7, 2022]
+        RD2[Row 2: 102, Sara, DS, 3.9, 2021]
+        RD3[Mixed types in every block: poor compression]
     end
-    subgraph COL3[Columnar: same-type data per block]
-        CD1["Department col: CS,CS,CS,DS,CS,CS,DS\nAll same type, RLE reduces to 2 values"]
-        CD2["CGPA col: 3.7,3.9,3.4,3.8,3.6\nNarrow float range, delta encodes well"]
+    subgraph COL3[Columnar Storage]
+        CD1[Dept col: CS, CS, DS, CS, DS]
+        CD2[RLE reduces that to just 2 dictionary entries]
+        CD3[CGPA col: 3.7, 3.9, 3.4, 3.8, 3.6]
+        CD4[Narrow float range: delta encoding compresses well]
     end
 
     style ROW3 fill:#c1121f,color:#fff,stroke:#c1121f
     style COL3 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style RD1 fill:#c1121f,color:#fff,stroke:#fff
+    style RD2 fill:#c1121f,color:#fff,stroke:#fff
+    style RD3 fill:#c1121f,color:#fff,stroke:#fff
+    style CD1 fill:#2d6a4f,color:#fff,stroke:#fff
+    style CD2 fill:#2d6a4f,color:#fff,stroke:#fff
+    style CD3 fill:#2d6a4f,color:#fff,stroke:#fff
+    style CD4 fill:#2d6a4f,color:#fff,stroke:#fff
 ```
 
 A TransactionType column with only three possible values (PURCHASE, REFUND, WITHDRAWAL) across 10 million records compresses to almost nothing in columnar storage. Row-based storage cannot exploit this because it sees mixed data in every block.
