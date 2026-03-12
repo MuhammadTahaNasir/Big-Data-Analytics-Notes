@@ -26,7 +26,7 @@ A table with 10 billion rows on a single server has hard physical limits: one di
 ```mermaid
 flowchart LR
     SINGLE[Single server: 10 billion rows] -->|One disk, one CPU bottleneck| SLOW[Query takes hours]
-    PART[Partitioned across 10 servers: 1 billion rows each] -->|Parallel processing| FAST[Query takes minutes]
+    PART[Partitioned: 10 servers, 1B rows each] -->|Parallel processing| FAST[Query takes minutes]
 
     style SINGLE fill:#c1121f,color:#fff,stroke:#c1121f
     style SLOW fill:#c1121f,color:#fff,stroke:#c1121f
@@ -139,7 +139,7 @@ flowchart TD
     Q1 -->|No: diverse key access| Q2{Even distribution critical?}
     Q2 -->|Yes| HASH[Use Hash Partitioning]
     Q2 -->|No, categorical dimension| LIST[Use List Partitioning]
-    RANGE --> COMP[Consider Composite: range then hash within each range]
+    RANGE --> COMP[Composite: range then hash within range]
     HASH --> COMP
 
     style START fill:#1d3557,color:#fff,stroke:#1d3557
@@ -200,22 +200,24 @@ Every shard is a partition, but not every partition is a shard. Sharding implies
 
 ```mermaid
 flowchart LR
-    subgraph SINGLE2[Single Machine Limits]
-        SM1[Maximum RAM]
-        SM2[Maximum disk capacity]
-        SM3[Maximum network throughput]
-        SM4[Maximum CPU cores]
-    end
-    subgraph SHARDED[Sharded Cluster: N machines]
-        SH1[Storage: 1 over N per shard]
-        SH2[Query throughput: N times higher]
-        SH3[Write throughput: N times higher]
-    end
+    SM[Single machine] --> LIM1[Max RAM limit]
+    SM --> LIM2[Max disk limit]
+    SM --> LIM3[Max CPU limit]
+    SM --> LIM4[Max network limit]
 
-    SINGLE2 -->|Scale out with sharding| SHARDED
+    SHARD[Sharded cluster: N nodes] --> SH1[Storage: 1 over N per shard]
+    SHARD --> SH2[Query throughput: N times higher]
+    SHARD --> SH3[Write throughput: N times higher]
 
-    style SINGLE2 fill:#c1121f,color:#fff,stroke:#c1121f
-    style SHARDED fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SM fill:#c1121f,color:#fff,stroke:#c1121f
+    style LIM1 fill:#c1121f,color:#fff,stroke:#c1121f
+    style LIM2 fill:#c1121f,color:#fff,stroke:#c1121f
+    style LIM3 fill:#c1121f,color:#fff,stroke:#c1121f
+    style LIM4 fill:#c1121f,color:#fff,stroke:#c1121f
+    style SHARD fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SH1 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SH2 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SH3 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
 A 100 TB dataset across 100 shards requires only 1 TB per shard. A query touching multiple shards executes in parallel across all of them.
@@ -226,13 +228,15 @@ A 100 TB dataset across 100 shards requires only 1 TB per shard. A query touchin
 
 ```mermaid
 flowchart TD
-    Q[JOIN: TableA sharded by CustomerID, TableB sharded by ProductID] --> PROB[Rows for same customer are on different shards in TableB]
-    PROB --> SHUFFLE[Network shuffle: redistribute TableB rows to match TableA sharding]
-    SHUFFLE --> COST[Expensive: data moved across network before join can happen]
+    Q[TableA sharded by CustomerID] --> PROB[TableB sharded by ProductID]
+    PROB --> SHUFFLE[Matching rows on different shards]
+    SHUFFLE --> REPART[Must redistribute TableB over network]
+    REPART --> COST[Expensive: network shuffle before join]
 
     style Q fill:#1d3557,color:#fff,stroke:#1d3557
     style PROB fill:#c1121f,color:#fff,stroke:#c1121f
     style SHUFFLE fill:#e07c24,color:#fff,stroke:#e07c24
+    style REPART fill:#e07c24,color:#fff,stroke:#e07c24
     style COST fill:#c1121f,color:#fff,stroke:#c1121f
 ```
 
@@ -246,10 +250,10 @@ Naive hash sharding requires rehashing every row when adding a new shard. Consis
 
 ```mermaid
 flowchart LR
-    RING[Conceptual ring: shards and keys placed on it] --> ASSIGN[Each key assigned to nearest shard clockwise]
+    RING[Ring: shards and keys placed on it] --> ASSIGN[Key goes to nearest shard clockwise]
     ASSIGN --> ADD[New shard added to ring]
-    ADD --> MOVE[Only keys between new shard and its predecessor need to move]
-    MOVE --> RESULT[Typically 1 over N of all data moved, not everything]
+    ADD --> MOVE[Only predecessor keys need to move]
+    MOVE --> RESULT[1 over N of data moved, not all]
 
     style RING fill:#1d3557,color:#fff,stroke:#1d3557
     style ASSIGN fill:#457b9d,color:#fff,stroke:#457b9d
@@ -344,15 +348,15 @@ This reflects a real challenge. Cache invalidation done incorrectly produces **s
 
 ```mermaid
 flowchart TD
-    STRAT[Cache Invalidation Strategies] --> TTL2[TTL-based: entries expire after fixed duration]
-    STRAT --> WT[Write-through: update cache and database simultaneously on every write]
-    STRAT --> WB[Write-behind: write to cache first, update database asynchronously]
-    STRAT --> CA[Cache-aside: application manages cache explicitly on reads and writes]
+    STRAT[Cache Invalidation Strategies] --> TTL2[TTL-based]
+    STRAT --> WT[Write-through]
+    STRAT --> WB[Write-behind]
+    STRAT --> CA[Cache-aside]
 
-    TTL2 --> T1[Simple; data may be stale for up to TTL duration]
-    WT --> T2[Always consistent; higher write latency]
-    WB --> T3[Fastest writes; risk of data loss if cache fails]
-    CA --> T4[Most flexible; requires careful application coordination]
+    TTL2 --> T1[Simple; stale up to TTL duration]
+    WT --> T2[Always consistent; slower writes]
+    WB --> T3[Fastest writes; data loss risk]
+    CA --> T4[Most flexible; app manages cache]
 
     style STRAT fill:#1d3557,color:#fff,stroke:#1d3557
     style TTL2 fill:#457b9d,color:#fff,stroke:#457b9d
@@ -382,8 +386,8 @@ Every SQL-based system (MySQL, PostgreSQL, Hive, Presto, Spark SQL) has an inter
 ```mermaid
 flowchart LR
     SQL[SQL Query] --> OPT[Query Optimizer]
-    OPT --> RBO[Rule-based optimization: always-beneficial transformations]
-    OPT --> CBO[Cost-based optimization: statistics-driven plan selection]
+    OPT --> RBO[Rule-based: RBO]
+    OPT --> CBO[Cost-based: CBO]
     RBO --> PLAN[Execution Plan]
     CBO --> PLAN
     PLAN --> EXEC[Execution Engine]
@@ -473,23 +477,23 @@ flowchart TD
     SQL2[SQL Query] --> ANA[Phase 1: Analysis]
     ANA --> ANA1[Resolve column and table references]
     ANA1 --> ANA2[Check type compatibility]
-    ANA2 --> LP[Logical Plan: abstract representation of what to compute]
+    ANA2 --> LP[Logical Plan]
 
     LP --> LO[Phase 2: Logical Optimization]
-    LO --> LO1[Predicate pushdown: filter before join]
-    LO1 --> LO2[Column pruning: drop unused columns]
-    LO2 --> LO3[Constant folding and subquery unnesting]
+    LO --> LO1[Predicate pushdown]
+    LO1 --> LO2[Column pruning]
+    LO2 --> LO3[Constant folding]
     LO3 --> OLP[Optimized Logical Plan]
 
     OLP --> PP[Phase 3: Physical Planning]
-    PP --> PP1[Choose join strategy: broadcast or sort-merge or shuffle hash]
+    PP --> PP1[Choose join strategy]
     PP1 --> PP2[Choose aggregation strategy]
-    PP2 --> PP3[Cost-estimate multiple candidates, pick cheapest]
+    PP2 --> PP3[Cost-estimate candidates, pick cheapest]
     PP3 --> PHYS[Physical Plan]
 
     PHYS --> TUN[Phase 4: Tungsten Code Generation]
-    TUN --> TUN1[Generate optimized Java bytecode for this specific query]
-    TUN1 --> EXEC2[Execution: near hand-written Java performance]
+    TUN --> TUN1[Generate optimized JVM bytecode]
+    TUN1 --> EXEC2[Execution]
 
     style SQL2 fill:#1d3557,color:#fff,stroke:#1d3557
     style LP fill:#457b9d,color:#fff,stroke:#457b9d
@@ -534,13 +538,13 @@ AQE is one of the most important additions to Spark in recent versions. It exten
 
 ```mermaid
 flowchart LR
-    EXEC3[Query executing] --> OBS[Observe runtime statistics]
-    OBS --> SKW{Skewed partition detected?}
-    SKW -->|Yes| SPLIT[Split skewed partition into smaller pieces]
-    OBS --> SHF{Shuffle produced mostly empty partitions?}
-    SHF -->|Yes| COAL[Coalesce partitions to reduce task overhead]
-    OBS --> JOIN{Table turned out small at runtime?}
-    JOIN -->|Yes| BROAD[Switch from sort-merge to broadcast hash join]
+    EXEC3[Query executing] --> OBS[Observe runtime stats]
+    OBS --> SKW{Partition skewed?}
+    SKW -->|Yes| SPLIT[Split skewed partition]
+    OBS --> SHF{Shuffle mostly empty?}
+    SHF -->|Yes| COAL[Coalesce small partitions]
+    OBS --> JOIN2{Table small at runtime?}
+    JOIN2 -->|Yes| BROAD[Switch to broadcast join]
 
     style EXEC3 fill:#1d3557,color:#fff,stroke:#1d3557
     style OBS fill:#457b9d,color:#fff,stroke:#457b9d
@@ -580,39 +584,23 @@ A financial services company processes 50 million transactions per day across 10
 
 ```mermaid
 flowchart TD
-    INGEST[Kafka: real-time transaction streams] --> HOT
+    KAFKA[Kafka: ingestion] --> PG[PostgreSQL: hot data]
+    PG --> REDIS2[Redis: cache layer]
+    PG --> HDFS[Parquet on HDFS: warm data]
+    HDFS --> S3F[Parquet on S3: cold data]
 
-    subgraph HOT[Hot layer: last 30 days]
-        PG[PostgreSQL: sharded by CustomerID, 8 shards]
-        REDIS2[Redis cache: 1-hour TTL on frequent customer queries]
-        PG --> REDIS2
-    end
+    REDIS2 --> Q1[Sub-second customer queries]
+    HDFS --> Q2[Presto: analyst queries in seconds]
+    S3F --> Q3[Spark: batch compliance reports]
 
-    subgraph WARM[Warm layer: 30 days to 2 years]
-        PAR[Parquet on HDFS: partitioned by year and month]
-        PREST[Presto: interactive analytical queries]
-        PAR --> PREST
-    end
-
-    subgraph COLD[Cold layer: 2 plus years]
-        S3F[Parquet on Amazon S3: cheaper storage]
-        SPARK2[Spark: batch compliance reports]
-        S3F --> SPARK2
-    end
-
-    HOT --> WARM
-    WARM --> COLD
-
-    QUERY[Analyst or customer query] --> REDIS2
-    REDIS2 -->|Cache miss| PG
-    QUERY --> PREST
-    QUERY --> SPARK2
-
-    style INGEST fill:#1d3557,color:#fff,stroke:#1d3557
-    style HOT fill:#c1121f,color:#fff,stroke:#c1121f
-    style WARM fill:#e07c24,color:#fff,stroke:#e07c24
-    style COLD fill:#457b9d,color:#fff,stroke:#457b9d
-    style QUERY fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style KAFKA fill:#1d3557,color:#fff,stroke:#1d3557
+    style PG fill:#c1121f,color:#fff,stroke:#c1121f
+    style REDIS2 fill:#e07c24,color:#fff,stroke:#e07c24
+    style HDFS fill:#457b9d,color:#fff,stroke:#457b9d
+    style S3F fill:#457b9d,color:#fff,stroke:#457b9d
+    style Q1 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style Q2 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style Q3 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
 | Layer | Technology | Partitioning | Query Latency |
@@ -648,9 +636,9 @@ flowchart LR
     CACHE2 --> CB2[LRU and TTL for eviction]
     CACHE2 --> CC2[Invalidation is the hard problem]
 
-    QO --> QA[Hive: partition pruning, MapJoin, vectorization]
-    QO --> QB[Presto: CBO, dynamic filtering, adaptive execution]
-    QO --> QC[Spark: Catalyst four phases plus AQE at runtime]
+    QO --> QA[Hive: pruning, MapJoin, vectorization]
+    QO --> QB[Presto: CBO, dynamic filtering, AQE]
+    QO --> QC[Spark: Catalyst four phases plus AQE]
 
     style W3L3 fill:#1d3557,color:#fff,stroke:#1d3557
     style PART2 fill:#457b9d,color:#fff,stroke:#457b9d
