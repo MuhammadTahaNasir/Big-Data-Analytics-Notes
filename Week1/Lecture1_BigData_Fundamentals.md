@@ -1,4 +1,4 @@
-# Big Data Analytics (BDA Spring 2026)
+# Big Data Analytics (BDA  Spring 2026)
 ## Week 1, Lecture 1: What is Big Data? The 5 Vs, Data Sources, and Why It All Matters
 
 > This course sits at the intersection of **systems engineering**, **data science**, **computer architecture**, and **business intelligence**. By the end, you will understand the machinery behind everyday tech like WhatsApp messages, bank transactions, and YouTube recommendations.
@@ -84,9 +84,9 @@ flowchart LR
     A --> C[Semi-Structured]
     A --> D[Unstructured]
 
-    B --> B1[Fixed schema: SQL tables, bank records]
-    C --> C1[Flexible fields: JSON, XML, log files]
-    D --> D1[No schema: images, video, audio, PDFs]
+    B --> B1[Fixed schema - SQL tables, bank records]
+    C --> C1[Flexible fields - JSON, XML, log files]
+    D --> D1[No schema - images, video, audio, PDFs]
 
     style A fill:#1d3557,color:#fff,stroke:#1d3557
     style B fill:#2d6a4f,color:#fff,stroke:#2d6a4f
@@ -172,9 +172,9 @@ flowchart TD
     V --> SS[Semi-Structured]
     V --> U[Unstructured]
 
-    S --> ST[Tools: SQL, RDBMS]
-    SS --> SST[Tools: JSON and XML parsers]
-    U --> UT[Tools: ML, NLP, computer vision]
+    S --> ST[Tools - SQL, RDBMS]
+    SS --> SST[Tools - JSON and XML parsers]
+    U --> UT[Tools - ML, NLP, computer vision]
 
     style V fill:#1d3557,color:#fff,stroke:#1d3557
     style S fill:#2d6a4f,color:#fff,stroke:#2d6a4f
