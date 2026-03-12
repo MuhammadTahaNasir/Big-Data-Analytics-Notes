@@ -1,7 +1,5 @@
 # Big Data Analytics (BDA Spring 2026)
-## Week 1 — Lecture 1: What is Big Data? The 5 Vs, Data Sources, and Why It All Matters
-
----
+## Week 1, Lecture 1: What is Big Data? The 5 Vs, Data Sources, and Why It All Matters
 
 > This course sits at the intersection of **systems engineering**, **data science**, **computer architecture**, and **business intelligence**. By the end, you will understand the machinery behind everyday tech like WhatsApp messages, bank transactions, and YouTube recommendations.
 
@@ -30,55 +28,55 @@ That is 2.5 followed by 18 zeros, produced daily across billions of devices, use
 
 ## 2. Raw Data Sources
 
-To understand where Big Data comes from, consider a single morning in your life and count every data source it touches.
+Consider a single morning in your life and count every data source it touches.
 
-| Time | Action | Data Type |
-|------|--------|-----------|
-| Wake up | Check Instagram | Social media data — JSON posts, image metadata, timestamps |
-| Morning | Open banking app | Transactional data — structured records, debits and credits |
-| Commute | Google search | Clickstream data — queries, hover events, link clicks |
-| Exercise | Smartwatch sync | Sensor/IoT data — heart rate, step count |
-| Arrive university | Connect to WiFi | Network logs — device ID, connection timestamps |
-| Walk hallway | CCTV records you | Surveillance data — image frames, video streams |
-| Open email | Server delivers it | Server/application logs — access logs, error logs |
+| Action | Data Type |
+|--------|-----------|
+| Check Instagram | Social media data: JSON posts, image metadata, timestamps |
+| Open banking app | Transactional data: structured records, debits and credits |
+| Google search | Clickstream data: queries, hover events, link clicks |
+| Smartwatch sync | Sensor/IoT data: heart rate, step count |
+| Connect to university WiFi | Network logs: device ID, connection timestamps |
+| Walk past CCTV | Surveillance data: image frames, video streams |
+| Open email | Server/application logs: access logs, error logs |
 
-Multiply this by 8 billion people, then add hospitals recording patient vitals, factories monitoring machinery, satellites imaging the earth, and financial markets executing millions of trades per second. This is why Big Data is fundamentally different from anything before it.
+Multiply this by 8 billion people, then add hospitals, factories, satellites, and financial markets executing millions of trades per second.
 
 ### Data Source Categories
 
 ```mermaid
 mindmap
   root((Raw Data Sources))
-    Web Application Logs
-      Every click and page load
+    Web Logs
+      Clicks and page loads
       Error logs
-    Transaction Data
+    Transactions
       Banking transfers
-      E-commerce purchases
+      E-commerce
     Social Media
-      JSON posts and comments
+      Posts and comments
       Follower graphs
-    Sensor and IoT Data
+    Sensor and IoT
       Wearables
       Smart meters
       Industrial sensors
-    Clickstream Data
+    Clickstream
       User action sequences
       Behavioral patterns
-    Surveillance Data
+    Surveillance
       CCTV cameras
       Motion sensors
-    Healthcare Data
+    Healthcare
       Hospital records
       Genomic sequences
     Network Data
-      Packets and routing tables
+      Routing tables
       Firewall logs
 ```
 
 ### Three Formats of Data
 
-A critical point raised in class: all these sources do **not** store data the same way.
+All these sources do **not** store data the same way.
 
 ```mermaid
 flowchart LR
@@ -86,100 +84,112 @@ flowchart LR
     A --> C[Semi-Structured]
     A --> D[Unstructured]
 
-    B --> B1["Fixed schema — rows and columns\nExamples: SQL tables, bank transactions"]
-    C --> C1["Flexible fields, some organization\nExamples: JSON, XML, log files"]
-    D --> D1["No fixed schema\n~80% of all data today\nExamples: images, videos, audio, PDFs"]
+    B --> B1[Fixed schema: SQL tables, bank records]
+    C --> C1[Flexible fields: JSON, XML, log files]
+    D --> D1[No schema: images, video, audio, PDFs]
+
+    style A fill:#1d3557,color:#fff,stroke:#1d3557
+    style B fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style C fill:#e07c24,color:#fff,stroke:#e07c24
+    style D fill:#c1121f,color:#fff,stroke:#c1121f
+    style B1 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style C1 fill:#e07c24,color:#fff,stroke:#e07c24
+    style D1 fill:#c1121f,color:#fff,stroke:#c1121f
 ```
 
-Each format requires different storage strategies, file formats, and processing tools — covered in depth in Week 2.
+Unstructured data makes up roughly **80% of all data generated today**. Each format requires different storage strategies and tools, covered in Week 2.
 
 ---
 
 ## 3. The 5 Vs of Big Data
 
-Big Data is not defined by size alone. It is defined by five fundamental characteristics known as the **5 Vs**. The original framework came from **Doug Laney in 2001** with 3 Vs (Volume, Velocity, Variety). IBM later added Veracity, and Value was added after that.
+Big Data is defined by five fundamental characteristics. The original framework came from **Doug Laney in 2001** with 3 Vs (Volume, Velocity, Variety). IBM added Veracity later, and Value was added after that.
 
 ```mermaid
 flowchart TD
-    BD["BIG DATA\nDefined by 5 Vs"] --> V1["VOLUME\nHow much?"]
-    BD --> V2["VELOCITY\nHow fast?"]
-    BD --> V3["VARIETY\nWhat kind?"]
-    BD --> V4["VERACITY\nHow trustworthy?"]
-    BD --> V5["VALUE\nSo what?"]
+    BD[BIG DATA] --> V1[Volume]
+    BD --> V2[Velocity]
+    BD --> V3[Variety]
+    BD --> V4[Veracity]
+    BD --> V5[Value]
 
-    V1 --> V1D["Terabytes to Petabytes to Exabytes\nFacebook: 100+ PB/day"]
-    V2 --> V2D["Real-time fraud detection in milliseconds\nAutonomous vehicles: 100s of reads/sec"]
-    V3 --> V3D["Structured + Semi-structured + Unstructured\n80% of data today is unstructured"]
-    V4 --> V4D["Noisy sensors, bot activity, missing fields\nGarbage in = Garbage out"]
-    V5 --> V5D["Turn raw data into decisions\nThe destination everything else leads to"]
+    style BD fill:#1d3557,color:#fff,stroke:#1d3557
+    style V1 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style V2 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style V3 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style V4 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style V5 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
 ---
 
-### V1 — Volume
+### V1 - Volume
 
-Volume refers to the sheer quantity of data being generated and stored.
+Volume is the sheer quantity of data. Traditional databases were designed for gigabytes. Big Data operates at terabytes, petabytes, and beyond. Running a SQL query on a petabyte of data on a single machine could take days. That is the Volume problem.
 
-Traditional databases (MySQL, Oracle, SQL Server) were designed for gigabytes, maybe hundreds of gigabytes. When you run a SQL query on a petabyte of data on a single machine, you wait days, not seconds. That is the Volume problem.
-
-| Scale | Bytes | Real-World Reference |
-|-------|-------|---------------------|
-| Terabyte (TB) | 10¹² | ~500 hours of HD video |
-| Petabyte (PB) | 10¹⁵ | Facebook processes 100+ PB/day |
-| Exabyte (EB) | 10¹⁸ | CERN generates ~15 PB/year |
-| Zettabyte (ZB) | 10²¹ | All human genomes sequenced = ~40 ZB |
+| Scale | Size | Real-World Reference |
+|-------|------|---------------------|
+| Terabyte (TB) | 10^12 bytes | ~500 hours of HD video |
+| Petabyte (PB) | 10^15 bytes | Facebook processes 100+ PB/day |
+| Exabyte (EB) | 10^18 bytes | CERN generates ~15 PB/year |
+| Zettabyte (ZB) | 10^21 bytes | All human genomes sequenced = ~40 ZB |
 
 ---
 
-### V2 — Velocity
+### V2 - Velocity
 
-Velocity refers to the speed at which data arrives and must be processed.
-
-Traditional batch processing systems collect data, store it, and process it later. They cannot keep up with modern demands. This drives two distinct processing architectures:
+Velocity is the speed at which data arrives and must be processed. Traditional batch systems collect data and process it later. They cannot keep up with modern demands.
 
 ```mermaid
 flowchart LR
-    subgraph BATCH["BATCH PROCESSING"]
-        direction TB
-        B1[Collect Data] --> B2[Store Data] --> B3[Process Later]
-        B3 --> B4["Example: Daily sales report\ngenerated overnight"]
+    subgraph BATCH[Batch Processing]
+        B1[Collect] --> B2[Store] --> B3[Process Later]
     end
-
-    subgraph STREAM["STREAM PROCESSING"]
-        direction TB
+    subgraph STREAM[Stream Processing]
         S1[Data Arrives] --> S2[Process Immediately]
-        S2 --> S3["Example: Fraud detection on\nlive bank transactions"]
     end
 
-    BATCH ---|"Use case determines which architecture you need"| STREAM
+    style BATCH fill:#1d3557,color:#fff,stroke:#1d3557
+    style STREAM fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
-Real-world velocity examples include Twitter generating millions of tweets per minute during a cricket World Cup final, a fraud detection system that must analyze each transaction in milliseconds, and an autonomous vehicle that processes sensor data hundreds of times per second.
+| Type | Description | Example |
+|------|-------------|---------|
+| Batch Processing | Collect, store, then process in bulk | Daily sales report generated overnight |
+| Stream Processing | Continuous real-time processing as data arrives | Fraud detection on live bank transactions |
+
+Real-world examples: Twitter generates millions of tweets per minute during a cricket World Cup final. A fraud detection system must decide on each transaction in milliseconds. An autonomous vehicle processes sensor data hundreds of times per second.
 
 ---
 
-### V3 — Variety
+### V3 - Variety
 
-Variety refers to the diversity of data types and formats that must be handled.
+Variety is the diversity of data types and formats.
 
 ```mermaid
 flowchart TD
-    V["VARIETY"] --> S["Structured Data"]
-    V --> SS["Semi-Structured Data"]
-    V --> U["Unstructured Data"]
+    V[Variety] --> S[Structured]
+    V --> SS[Semi-Structured]
+    V --> U[Unstructured]
 
-    S --> ST["Tools: SQL, RDBMS\nFormats: CSV, relational tables"]
-    SS --> SST["Tools: JSON and XML parsers\nFormats: JSON, XML, log files"]
-    U --> UT["Tools: ML, NLP, computer vision\nFormats: Images, video, audio, PDFs\n~80% of all data generated today"]
+    S --> ST[Tools: SQL, RDBMS]
+    SS --> SST[Tools: JSON and XML parsers]
+    U --> UT[Tools: ML, NLP, computer vision]
+
+    style V fill:#1d3557,color:#fff,stroke:#1d3557
+    style S fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SS fill:#e07c24,color:#fff,stroke:#e07c24
+    style U fill:#c1121f,color:#fff,stroke:#c1121f
+    style ST fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style SST fill:#e07c24,color:#fff,stroke:#e07c24
+    style UT fill:#c1121f,color:#fff,stroke:#c1121f
 ```
 
 ---
 
-### V4 — Veracity
+### V4 - Veracity
 
-Veracity refers to the quality, accuracy, and trustworthiness of data. This is the most overlooked V by beginners but is considered critical by professionals.
-
-Real-world data is inherently messy:
+Veracity is the quality, accuracy, and trustworthiness of data. This is the most overlooked V by beginners but is considered critical by professionals.
 
 | Data Source | Quality Problem |
 |-------------|----------------|
@@ -191,26 +201,29 @@ Real-world data is inherently messy:
 
 **"Garbage in, garbage out"** is not just a saying. It is a fundamental law of data systems. Running sophisticated machine learning on dirty data produces sophisticated wrong answers.
 
-Data cleaning, validation, and quality management are not glamorous topics, but they can make or break an entire analytics project.
-
 ---
 
-### V5 — Value
+### V5 - Value
 
-Value refers to the actionable insights and business outcomes that justify all the investment in Big Data infrastructure. The goal is never to collect data for the sake of collecting it.
+Value is the actionable insights and business outcomes extracted from data. The goal is never to collect data for its own sake.
 
 ```mermaid
 flowchart LR
-    RD["Raw Data"] --> BD["Big Data Pipeline"]
-    BD --> IN["Insights"]
-    IN --> DE["Decisions"]
-    DE --> VA["Business Value"]
+    A[Raw Data] --> B[Big Data Pipeline] --> C[Insights] --> D[Decisions] --> E[Business Value]
 
-    VA --> EX1["Amazon: Recommendations\ndrive billions in revenue"]
-    VA --> EX2["Google: Search patterns\nimprove ranking"]
-    VA --> EX3["Hospitals: Predict disease\noutbreaks early"]
-    VA --> EX4["Telecom: Predict equipment\nfailure before customers notice"]
+    style A fill:#457b9d,color:#fff,stroke:#457b9d
+    style B fill:#457b9d,color:#fff,stroke:#457b9d
+    style C fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style D fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style E fill:#1d3557,color:#fff,stroke:#1d3557
 ```
+
+| Company | Data Used | Value Created |
+|---------|-----------|--------------|
+| Amazon | Purchase history | Product recommendations driving billions in revenue |
+| Google | Search patterns | Improved ranking algorithms |
+| Hospitals | Patient data | Predict disease outbreaks before they spread |
+| Telecom | Network logs | Predict equipment failure before customers notice |
 
 Value is the destination. Volume, Velocity, Variety, and Veracity are the challenges you must overcome to reach it.
 
@@ -218,40 +231,37 @@ Value is the destination. Volume, Velocity, Variety, and Veracity are the challe
 
 ## 4. Big Data vs Traditional Data Systems
 
-The most fundamental shift between traditional and Big Data systems is philosophical:
+The most fundamental shift is philosophical:
+
+- Traditional systems say: **bring the data to the computation.** One powerful machine, load data in, process centrally.
+- Big Data systems say: **bring the computation to the data.** Distribute data across hundreds of commodity machines and send tasks to where data lives.
+
+This is the core philosophy behind Hadoop's design.
 
 ```mermaid
-flowchart TD
-    subgraph TRAD["TRADITIONAL SYSTEMS"]
-        direction TB
-        T1["One powerful machine"] --> T2["Load all data into it"]
-        T2 --> T3["Process centrally"]
-        T3 --> T4["Principle: Bring DATA to the computation"]
+flowchart LR
+    subgraph TRAD[Traditional Systems]
+        T1[One powerful machine] --> T2[Load all data] --> T3[Process centrally]
+    end
+    subgraph BIG[Big Data Systems]
+        B1[Thousands of commodity machines] --> B2[Data distributed] --> B3[Tasks go to data]
     end
 
-    subgraph BIG["BIG DATA SYSTEMS"]
-        direction TB
-        B1["Hundreds or thousands of\ncommodity machines"] --> B2["Data distributed\nacross all of them"]
-        B2 --> B3["Send small tasks to\nwhere data already lives"]
-        B3 --> B4["Principle: Bring COMPUTATION to the data"]
-    end
+    TRAD -->|Scale breaks this| BIG
 
-    TRAD --"Scale breaks the traditional approach"--> BIG
+    style TRAD fill:#c1121f,color:#fff,stroke:#c1121f
+    style BIG fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
-This philosophy of bringing computation to data is the **core design principle of Hadoop**, covered in detail in upcoming weeks.
-
-### Side-by-Side Comparison
-
-| Dimension | Traditional Data Systems | Big Data Systems |
-|-----------|------------------------|-----------------|
+| Dimension | Traditional | Big Data |
+|-----------|-------------|---------|
 | Scale | Gigabytes | Terabytes to Petabytes |
 | Data Types | Structured only | Structured + Semi + Unstructured |
 | Processing | Single machine | Distributed cluster |
 | Schema | Fixed, predefined | Flexible, schema-on-read |
 | Speed | Batch queries | Batch and real-time streaming |
 | Tools | SQL, RDBMS | Hadoop, Spark, Kafka, NoSQL |
-| Hardware | Expensive, specialized | Commodity (cheap, ordinary) servers |
+| Hardware | Expensive, specialized | Commodity servers |
 
 ---
 
@@ -259,29 +269,33 @@ This philosophy of bringing computation to data is the **core design principle o
 
 These are related but distinct disciplines. This course sits at their intersection.
 
+| Role | Core Question | Primary Tools |
+|------|--------------|---------------|
+| Data Scientist | What does this data tell us? What patterns exist? | Python, pandas, scikit-learn, TensorFlow |
+| Data Engineer | How do I collect, store, clean, and deliver data at scale? | Spark, Kafka, ETL pipelines, distributed databases |
+| Big Data Analyst | How do I build the entire system at scale? | Both sets above combined |
+
 ```mermaid
 flowchart TD
-    DS["DATA SCIENTIST\nBuilds the engine\n\nAsks: What does this data tell us?\nWhat patterns exist? Can I predict churn?\n\nTools: Python, pandas, scikit-learn,\nTensorFlow, statistics, ML models"]
+    DS[Data Scientist] --> BDA[Big Data Analyst]
+    DE[Data Engineer] --> BDA
 
-    DE["DATA ENGINEER\nBuilds the road\n\nAsks: How do I collect, store, clean,\ntransform, and deliver data at scale?\n\nTools: Spark, Kafka, ETL pipelines,\ndistributed databases"]
-
-    BDA["BIG DATA ANALYST\nDesigns the entire transportation system\n\nNeeds both: Engineering mindset of a\ndata engineer and analytical thinking\nof a data scientist\n\nThis course covers both sides"]
-
-    DS --- BDA
-    DE --- BDA
+    style DS fill:#457b9d,color:#fff,stroke:#457b9d
+    style DE fill:#457b9d,color:#fff,stroke:#457b9d
+    style BDA fill:#1d3557,color:#fff,stroke:#1d3557
 ```
 
-All three roles are highly paid in today's market. Data engineers are currently in extremely high demand because companies have realized that even the best data scientists cannot function without reliable, scalable data infrastructure.
+The analogy from class: the data scientist builds the **engine**, the data engineer builds the **road**, the big data analyst designs the entire **transportation system**.
+
+All three roles are highly paid. Data engineers are currently in extremely high demand because even the best data scientists cannot function without reliable, scalable data infrastructure.
 
 ---
 
 ## 6. Industry Use Cases
 
-Every application below relies on the distributed systems, algorithms, and frameworks taught in this course.
-
 ```mermaid
 mindmap
-  root((Big Data\nApplications))
+  root((Big Data Applications))
     Finance
       Fraud detection
       Algorithmic trading
@@ -308,29 +322,17 @@ mindmap
       Pollution tracking
 ```
 
-### Finance and Banking
+**Finance and Banking:** Real-time fraud detection, algorithmic trading executing thousands of trades per second, credit risk modeling across millions of customers, compliance reporting across billions of transactions.
 
-Real-time fraud detection on credit card transactions, algorithmic trading executing thousands of trades per second, credit risk modeling across millions of customers, and regulatory compliance reporting across billions of transactions.
+**Healthcare:** Genomic data analysis for personalized cancer treatment, predicting ICU deterioration hours ahead, AI processing of medical imaging for early detection, real-time epidemic tracking.
 
-### Healthcare
+**Web and Technology:** Indexing and ranking billions of pages, personalized content recommendations, behavioral ad targeting, A/B testing at massive scale.
 
-Analyzing genomic data to personalize cancer treatments, predicting ICU patient deterioration hours before it happens, processing medical imaging with AI for early disease detection, and tracking epidemic spread in real time.
+**Retail and E-Commerce:** Demand forecasting, dynamic pricing, supply chain optimization, real-time inventory management across thousands of warehouses.
 
-### Web and Technology
+**Telecommunications:** Network anomaly detection, predictive equipment maintenance, customer churn prediction, traffic routing optimization.
 
-Search engine indexing and ranking billions of pages, personalized content recommendation on streaming platforms, advertising targeting based on behavioral patterns, and A/B testing at massive scale.
-
-### Retail and E-Commerce
-
-Demand forecasting, dynamic pricing, supply chain optimization, customer segmentation, and real-time inventory management across thousands of warehouses.
-
-### Telecommunications
-
-Network anomaly detection, predictive maintenance of towers and equipment, customer churn prediction, and traffic routing optimization.
-
-### Smart Cities and IoT
-
-Traffic flow optimization using sensor networks, energy grid management, water system monitoring, and pollution tracking.
+**Smart Cities and IoT:** Traffic flow optimization via sensor networks, energy grid management, water system monitoring, pollution tracking.
 
 ---
 
