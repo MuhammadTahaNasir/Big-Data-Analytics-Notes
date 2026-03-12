@@ -25,8 +25,8 @@ A table with 10 billion rows on a single server has hard physical limits: one di
 
 ```mermaid
 flowchart LR
-    SINGLE[Single server: 10 billion rows] -->|One disk, one CPU bottleneck| SLOW[Query takes hours]
-    PART[Partitioned: 10 servers, 1B rows each] -->|Parallel processing| FAST[Query takes minutes]
+    SINGLE[Single server - 10 billion rows] -->|One disk, one CPU bottleneck| SLOW[Query takes hours]
+    PART[Partitioned - 10 servers, 1B rows each] -->|Parallel processing| FAST[Query takes minutes]
 
     style SINGLE fill:#c1121f,color:#fff,stroke:#c1121f
     style SLOW fill:#c1121f,color:#fff,stroke:#c1121f
@@ -51,10 +51,10 @@ Data is divided based on value ranges of a chosen partition key.
 
 ```mermaid
 flowchart TD
-    TABLE[Transactions Table: 12 billion rows] --> P1[Partition 1: Jan 2024]
-    TABLE --> P2[Partition 2: Feb 2024]
-    TABLE --> P3[Partition 3: Mar 2024]
-    TABLE --> PN[Partition 12: Dec 2024]
+    TABLE[Transactions Table - 12 billion rows] --> P1[Partition 1 - Jan 2024]
+    TABLE --> P2[Partition 2 - Feb 2024]
+    TABLE --> P3[Partition 3 - Mar 2024]
+    TABLE --> PN[Partition 12 - Dec 2024]
 
     style TABLE fill:#1d3557,color:#fff,stroke:#1d3557
     style P1 fill:#457b9d,color:#fff,stroke:#457b9d
@@ -139,7 +139,7 @@ flowchart TD
     Q1 -->|No: diverse key access| Q2{Even distribution critical?}
     Q2 -->|Yes| HASH[Use Hash Partitioning]
     Q2 -->|No, categorical dimension| LIST[Use List Partitioning]
-    RANGE --> COMP[Composite: range then hash within range]
+    RANGE --> COMP[Composite - range then hash within range]
     HASH --> COMP
 
     style START fill:#1d3557,color:#fff,stroke:#1d3557
@@ -205,9 +205,9 @@ flowchart LR
     SM --> LIM3[Max CPU limit]
     SM --> LIM4[Max network limit]
 
-    SHARD[Sharded cluster: N nodes] --> SH1[Storage: 1 over N per shard]
-    SHARD --> SH2[Query throughput: N times higher]
-    SHARD --> SH3[Write throughput: N times higher]
+    SHARD[Sharded cluster - N nodes] --> SH1[Storage - 1 over N per shard]
+    SHARD --> SH2[Query throughput - N times higher]
+    SHARD --> SH3[Write throughput - N times higher]
 
     style SM fill:#c1121f,color:#fff,stroke:#c1121f
     style LIM1 fill:#c1121f,color:#fff,stroke:#c1121f
@@ -231,7 +231,7 @@ flowchart TD
     Q[TableA sharded by CustomerID] --> PROB[TableB sharded by ProductID]
     PROB --> SHUFFLE[Matching rows on different shards]
     SHUFFLE --> REPART[Must redistribute TableB over network]
-    REPART --> COST[Expensive: network shuffle before join]
+    REPART --> COST[Expensive - network shuffle before join]
 
     style Q fill:#1d3557,color:#fff,stroke:#1d3557
     style PROB fill:#c1121f,color:#fff,stroke:#c1121f
@@ -250,7 +250,7 @@ Naive hash sharding requires rehashing every row when adding a new shard. Consis
 
 ```mermaid
 flowchart LR
-    RING[Ring: shards and keys placed on it] --> ASSIGN[Key goes to nearest shard clockwise]
+    RING[Ring - shards and keys placed on it] --> ASSIGN[Key goes to nearest shard clockwise]
     ASSIGN --> ADD[New shard added to ring]
     ADD --> MOVE[Only predecessor keys need to move]
     MOVE --> RESULT[1 over N of data moved, not all]
@@ -290,8 +290,8 @@ flowchart TD
     FETCH --> STORE[Store result in cache for future requests]
     STORE --> RET[Return result to client]
 
-    HIT --> TIME1[Response time: microseconds]
-    RET --> TIME2[Response time: milliseconds to seconds]
+    HIT --> TIME1[Response time - microseconds]
+    RET --> TIME2[Response time - milliseconds to seconds]
 
     style HIT fill:#2d6a4f,color:#fff,stroke:#2d6a4f
     style TIME1 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
@@ -386,8 +386,8 @@ Every SQL-based system (MySQL, PostgreSQL, Hive, Presto, Spark SQL) has an inter
 ```mermaid
 flowchart LR
     SQL[SQL Query] --> OPT[Query Optimizer]
-    OPT --> RBO[Rule-based: RBO]
-    OPT --> CBO[Cost-based: CBO]
+    OPT --> RBO[Rule-based - RBO]
+    OPT --> CBO[Cost-based - CBO]
     RBO --> PLAN[Execution Plan]
     CBO --> PLAN
     PLAN --> EXEC[Execution Engine]
@@ -474,24 +474,24 @@ Spark SQL's optimizer is called **Catalyst**, one of the most sophisticated quer
 
 ```mermaid
 flowchart TD
-    SQL2[SQL Query] --> ANA[Phase 1: Analysis]
+    SQL2[SQL Query] --> ANA[Phase 1 - Analysis]
     ANA --> ANA1[Resolve column and table references]
     ANA1 --> ANA2[Check type compatibility]
     ANA2 --> LP[Logical Plan]
 
-    LP --> LO[Phase 2: Logical Optimization]
+    LP --> LO[Phase 2 - Logical Optimization]
     LO --> LO1[Predicate pushdown]
     LO1 --> LO2[Column pruning]
     LO2 --> LO3[Constant folding]
     LO3 --> OLP[Optimized Logical Plan]
 
-    OLP --> PP[Phase 3: Physical Planning]
+    OLP --> PP[Phase 3 - Physical Planning]
     PP --> PP1[Choose join strategy]
     PP1 --> PP2[Choose aggregation strategy]
     PP2 --> PP3[Cost-estimate candidates, pick cheapest]
     PP3 --> PHYS[Physical Plan]
 
-    PHYS --> TUN[Phase 4: Tungsten Code Generation]
+    PHYS --> TUN[Phase 4 - Tungsten Code Generation]
     TUN --> TUN1[Generate optimized JVM bytecode]
     TUN1 --> EXEC2[Execution]
 
@@ -584,14 +584,14 @@ A financial services company processes 50 million transactions per day across 10
 
 ```mermaid
 flowchart TD
-    KAFKA[Kafka: ingestion] --> PG[PostgreSQL: hot data]
-    PG --> REDIS2[Redis: cache layer]
-    PG --> HDFS[Parquet on HDFS: warm data]
-    HDFS --> S3F[Parquet on S3: cold data]
+    KAFKA[Kafka - ingestion] --> PG[PostgreSQL - hot data]
+    PG --> REDIS2[Redis - cache layer]
+    PG --> HDFS[Parquet on HDFS - warm data]
+    HDFS --> S3F[Parquet on S3 - cold data]
 
     REDIS2 --> Q1[Sub-second customer queries]
-    HDFS --> Q2[Presto: analyst queries in seconds]
-    S3F --> Q3[Spark: batch compliance reports]
+    HDFS --> Q2[Presto - analyst queries in seconds]
+    S3F --> Q3[Spark - batch compliance reports]
 
     style KAFKA fill:#1d3557,color:#fff,stroke:#1d3557
     style PG fill:#c1121f,color:#fff,stroke:#c1121f
@@ -624,9 +624,9 @@ flowchart LR
     W3L3 --> CACHE2[Caching]
     W3L3 --> QO[Query Optimization]
 
-    PART2 --> PA[Range: partition pruning, hot spots]
-    PART2 --> PB[Hash: balanced, no range queries]
-    PART2 --> PC[Composite: combines both strategies]
+    PART2 --> PA[Range - partition pruning, hot spots]
+    PART2 --> PB[Hash - balanced, no range queries]
+    PART2 --> PC[Composite - combines both strategies]
 
     SHARD2 --> SA[Horizontal scale of storage and throughput]
     SHARD2 --> SB[Consistent hashing for rebalancing]
@@ -636,9 +636,9 @@ flowchart LR
     CACHE2 --> CB2[LRU and TTL for eviction]
     CACHE2 --> CC2[Invalidation is the hard problem]
 
-    QO --> QA[Hive: pruning, MapJoin, vectorization]
-    QO --> QB[Presto: CBO, dynamic filtering, AQE]
-    QO --> QC[Spark: Catalyst four phases plus AQE]
+    QO --> QA[Hive - pruning, MapJoin, vectorization]
+    QO --> QB[Presto - CBO, dynamic filtering, AQE]
+    QO --> QC[Spark - Catalyst four phases plus AQE]
 
     style W3L3 fill:#1d3557,color:#fff,stroke:#1d3557
     style PART2 fill:#457b9d,color:#fff,stroke:#457b9d
