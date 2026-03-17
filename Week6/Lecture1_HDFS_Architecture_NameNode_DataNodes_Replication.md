@@ -284,16 +284,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    subgraph NAIVE[Naive - 3x time]
         NC[Client] -->|128 MB| NA[DN A]
         NC -->|128 MB| NB[DN B]
         NC -->|128 MB| ND[DN C]
-    end
-    subgraph PIPE[Pipeline - ~1x time]
         PC[Client] -->|streams 64KB packets| PA[DN A]
         PA -->|forwards in parallel| PB[DN B]
         PB -->|forwards in parallel| PD[DN C]
-    end
 
     style NAIVE fill:#c1121f,color:#fff,stroke:#c1121f
     style PIPE fill:#2d6a4f,color:#fff,stroke:#2d6a4f
@@ -590,21 +586,17 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph HDFS2[HDFS]
         H1[NameNode bottleneck]
         H2[On-premises only]
         H3[Ops overhead - manage cluster]
         H4[Random write not supported]
-    end
-    subgraph S3[Cloud Object Storage - S3, GCS, ADLS]
-        S1[No metadata bottleneck]
-        S2[Virtually unlimited scale]
-        S3[Fully managed - no ops]
-        S4[Same write-once semantics]
-    end
+        C1[No metadata bottleneck]
+        C2[Virtually unlimited scale]
+        C3[Fully managed - no ops]
+        C4[Same write-once semantics]
 
     style HDFS2 fill:#e07c24,color:#fff,stroke:#e07c24
-    style S3 fill:#2d6a4f,color:#fff,stroke:#2d6a4f
+    style CLOUD fill:#2d6a4f,color:#fff,stroke:#2d6a4f
 ```
 
 In 2026 cloud object storage (Amazon S3, Google Cloud Storage, Azure Data Lake Storage) has largely replaced HDFS in new deployments. Spark, Presto, and Hive now work natively with object storage. The **Lakehouse architecture** (covered in Lecture 3 this week) is built on object storage rather than HDFS.
@@ -653,4 +645,4 @@ flowchart LR
 
 ---
 
-*BDA Sprinig 2026 | Week 6, Lecture 1 | HDFS Architecture - NameNode, DataNodes, Block Replication and Fault Tolerance*
+*BDA Spring 2026 | Week 6, Lecture 1 | HDFS Architecture - NameNode, DataNodes, Block Replication and Fault Tolerance*
